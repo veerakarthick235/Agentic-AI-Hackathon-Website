@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="50%" stop-color="#6C63FF"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <!-- Circle background -->
+  <circle cx="64" cy="64" r="62" fill="#030014"/>
+  <circle cx="64" cy="64" r="62" fill="url(#glow)"/>
+  <circle cx="64" cy="64" r="60" fill="none" stroke="url(#bg)" stroke-width="3"/>
+  <!-- Brain/AI circuit icon -->
+  <!-- Central node -->
+  <circle cx="64" cy="52" r="8" fill="url(#bg)"/>
+  <!-- Left node -->
+  <circle cx="38" cy="72" r="6" fill="url(#bg)" opacity="0.8"/>
+  <!-- Right node -->
+  <circle cx="90" cy="72" r="6" fill="url(#bg)" opacity="0.8"/>
+  <!-- Bottom node -->
+  <circle cx="64" cy="92" r="5" fill="url(#bg)" opacity="0.6"/>
+  <!-- Connections -->
+  <line x1="64" y1="60" x2="42" y2="68" stroke="url(#bg)" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="64" y1="60" x2="86" y2="68" stroke="url(#bg)" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <line x1="38" y1="78" x2="60" y2="89" stroke="url(#bg)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <line x1="90" y1="78" x2="68" y2="89" stroke="url(#bg)" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <!-- Inner glow dots on central node -->
+  <circle cx="64" cy="52" r="3" fill="#fff" opacity="0.9"/>
+  <circle cx="38" cy="72" r="2" fill="#fff" opacity="0.7"/>
+  <circle cx="90" cy="72" r="2" fill="#fff" opacity="0.7"/>
+  <circle cx="64" cy="92" r="1.5" fill="#fff" opacity="0.5"/>
+  <!-- Orbiting small dots -->
+  <circle cx="48" cy="42" r="2" fill="#00E5FF" opacity="0.6"/>
+  <circle cx="82" cy="44" r="2" fill="#8B5CF6" opacity="0.6"/>
+  <circle cx="52" cy="86" r="1.5" fill="#6C63FF" opacity="0.5"/>
+  <circle cx="78" cy="84" r="1.5" fill="#00E5FF" opacity="0.5"/>
+</svg>
