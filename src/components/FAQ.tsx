@@ -12,7 +12,7 @@ const faqs = [
   { q: 'Is there a registration fee?', a: 'No! The hackathon is completely free to participate in. We believe in making AI innovation accessible to all students.' },
   { q: 'What are the judging criteria?', a: 'Projects are evaluated on innovation, technical complexity, real-world impact, agentic capabilities, and presentation quality.' },
   { q: 'What tools can we use?', a: 'You can use any programming language, framework, or AI platform. We encourage using modern AI frameworks like LangChain, AutoGen, CrewAI, or building from scratch.' },
-  { q: 'How do we submit?', a: 'Submit your project through our platform with a demo video, GitHub repository, and a brief writeup explaining your AI agent\'s capabilities.' },
+  { q: 'How do we submit?', a: 'Submit your project through Devpost platform with a demo video, GitHub repository, and a brief writeup explaining your AI agent\'s capabilities.' },
 ];
 
 export default function FAQ() {
