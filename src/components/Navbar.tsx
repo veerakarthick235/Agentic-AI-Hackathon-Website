@@ -1,12 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 
-const DEVPOST_URL = 'https://agentic-ai-innovation-2026.devpost.com/';
-
-const NAV_LINKS = [
+const links = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
   { label: 'Themes', href: '#themes' },
@@ -15,175 +13,102 @@ const NAV_LINKS = [
   { label: 'Prizes', href: '#prizes' },
   { label: 'FAQ', href: '#faq' },
   { label: 'Contact', href: '#contact' },
-] as const;
+];
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [visible, setVisible] = useState(true);
-  const lastScrollY = useRef(0);
+  const { scrollY } = useScroll();
+  const prev = useRef(0);
 
-  const handleScroll = useCallback(() => {
-    const currentY = window.scrollY;
-
-    setScrolled(currentY > 20);
-
-    if (currentY > lastScrollY.current && currentY > 80) {
-      setVisible(false); // scrolling down
-    } else {
-      setVisible(true); // scrolling up
-    }
-
-    lastScrollY.current = currentY;
-  }, []);
+  useMotionValueEvent(scrollY, 'change', (v) => {
+    setScrolled(v > 20);
+    if (v > prev.current && v > 100) setHidden(true);
+    else if (v < prev.current - 5) setHidden(false);
+    prev.current = v;
+  });
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+    if (open) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = '';
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
 
-  // Lock body scroll when mobile menu is open
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
-  const smoothScroll = (href: string) => {
-    setIsOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+  const scrollTo = (href: string) => {
+    setOpen(false);
+    const el = document.querySelector(href);
+    el?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <>
       <motion.header
-        initial={{ y: 0 }}
-        animate={{ y: visible ? 0 : -80 }}
-        transition={{ duration: 0.3, ease: 'easeOut' }}
-        className={`fixed top-0 left-0 right-0 z-50 h-16 flex items-center transition-colors duration-300 ${
-          scrolled
-            ? 'glass !rounded-none border-x-0 border-t-0'
-            : 'bg-transparent border-b border-transparent'
+        initial={{ y: -100 }}
+        animate={{ y: hidden ? -100 : 0 }}
+        transition={{ duration: 0.3 }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
+          scrolled ? 'bg-[#030014]/80 backdrop-blur-2xl border-b border-white/5' : 'bg-transparent'
         }`}
       >
-        <nav className="mx-auto w-full max-w-7xl flex items-center justify-between px-6">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:py-5">
           {/* Logo */}
-          <a
-            href="#home"
-            onClick={(e) => {
-              e.preventDefault();
-              smoothScroll('#home');
-            }}
-            className="flex items-center gap-2 text-xl font-bold font-[family-name:var(--font-heading)] tracking-tight"
-          >
+          <a href="#home" onClick={(e) => { e.preventDefault(); scrollTo('#home'); }}
+            className="text-xl font-bold font-[family-name:var(--font-heading)]">
             <span className="gradient-text">AgenticAI</span>
           </a>
 
-          {/* Desktop Nav Links */}
+          {/* Desktop links */}
           <div className="hidden lg:flex items-center gap-1">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  smoothScroll(link.href);
-                }}
-                className="text-sm text-[#a1a1aa] hover:text-white px-3 py-2 rounded-lg transition-colors duration-200"
-              >
-                {link.label}
+            {links.map((l) => (
+              <a key={l.label} href={l.href}
+                onClick={(e) => { e.preventDefault(); scrollTo(l.href); }}
+                className="px-3 py-2 text-sm text-white/70 hover:text-white transition-colors rounded-lg hover:bg-white/5">
+                {l.label}
               </a>
             ))}
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center gap-3">
-            <a
-              href={DEVPOST_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-            >
-              <Sparkles className="w-4 h-4" />
-              Join Hackathon
-            </a>
-          </div>
+          <a href="https://agentic-ai-innovation-2026.devpost.com/" target="_blank" rel="noopener noreferrer"
+            className="hidden lg:inline-flex btn-primary text-sm !py-2.5 !px-5">
+            Join Hackathon
+          </a>
 
-          {/* Mobile Hamburger */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden relative z-50 p-2 text-[#a1a1aa] hover:text-white transition-colors"
-            aria-label={isOpen ? 'Close menu' : 'Open menu'}
-          >
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {/* Mobile toggle */}
+          <button onClick={() => setOpen(!open)} className="lg:hidden text-white p-2" aria-label="Menu">
+            {open ? <X size={24} /> : <Menu size={24} />}
           </button>
         </nav>
       </motion.header>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile overlay */}
       <AnimatePresence>
-        {isOpen && (
+        {open && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed inset-0 z-40 lg:hidden"
+            className="fixed inset-0 z-40 bg-[#030014]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-6"
           >
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-[#06060a]/90 backdrop-blur-xl"
-              onClick={() => setIsOpen(false)}
-            />
-
-            {/* Menu Content */}
-            <motion.nav
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-[#0c0c14] border-l border-[rgba(255,255,255,0.06)] flex flex-col"
-            >
-              <div className="h-16 flex-shrink-0" />
-
-              <div className="flex-1 flex flex-col px-6 py-8 gap-1 overflow-y-auto">
-                {NAV_LINKS.map((link, i) => (
-                  <motion.a
-                    key={link.href}
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      smoothScroll(link.href);
-                    }}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.05 * i, duration: 0.3, ease: 'easeOut' }}
-                    className="text-lg text-[#a1a1aa] hover:text-white py-3 px-4 rounded-xl hover:bg-[rgba(255,255,255,0.03)] transition-colors duration-200 font-[family-name:var(--font-heading)]"
-                  >
-                    {link.label}
-                  </motion.a>
-                ))}
-              </div>
-
-              <div className="px-6 py-6 border-t border-[rgba(255,255,255,0.06)]">
-                <a
-                  href={DEVPOST_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary w-full justify-center"
-                >
-                  <Sparkles className="w-4 h-4" />
-                  Join Hackathon
-                </a>
-              </div>
-            </motion.nav>
+            {links.map((l, i) => (
+              <motion.a key={l.label} href={l.href}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0, transition: { delay: i * 0.05 } }}
+                onClick={(e) => { e.preventDefault(); scrollTo(l.href); }}
+                className="text-2xl font-medium text-white/80 hover:text-white transition-colors">
+                {l.label}
+              </motion.a>
+            ))}
+            <motion.a href="https://agentic-ai-innovation-2026.devpost.com/"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0, transition: { delay: 0.4 } }}
+              onClick={() => setOpen(false)}
+              className="btn-primary mt-4"
+              target="_blank"
+              rel="noopener noreferrer">
+              Join Hackathon
+            </motion.a>
           </motion.div>
         )}
       </AnimatePresence>

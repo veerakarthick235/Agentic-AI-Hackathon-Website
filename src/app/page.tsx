@@ -13,11 +13,11 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-[var(--color-bg)]">
-      {/* Ambient background orbs */}
+    <main className="relative min-h-screen overflow-x-hidden" style={{ background: '#030014' }}>
+      {/* Fixed ambient glow orbs */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute top-[10%] left-[15%] w-[500px] h-[500px] rounded-full bg-[var(--color-indigo)]/[0.02] blur-[180px]" />
-        <div className="absolute bottom-[20%] right-[10%] w-[400px] h-[400px] rounded-full bg-[var(--color-sky)]/[0.02] blur-[180px]" />
+        <div className="absolute top-[10%] left-[15%] w-[500px] h-[500px] rounded-full bg-[#6C63FF]/[0.03] blur-[150px]" />
+        <div className="absolute bottom-[20%] right-[10%] w-[400px] h-[400px] rounded-full bg-[#00E5FF]/[0.03] blur-[150px]" />
       </div>
 
       {/* Content */}
